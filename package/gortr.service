@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 EnvironmentFile=/etc/default/gortr
 WorkingDirectory=/usr/share/gortr
-ExecStart=/usr/bin/gortr $GORTR_ARGS
+ExecStart=/usr/local/bin/gortr $GORTR_ARGS
 
 [Install]
 WantedBy=multi-user.target

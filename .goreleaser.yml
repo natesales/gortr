@@ -1,0 +1,67 @@
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - id: gortr
+    main: cmd/gortr/gortr.go
+    binary: gortr
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+
+  - id: rtrdump
+    main: cmd/rtrdump/rtrdump.go
+    binary: rtrdump
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+
+  - id: rtrmon
+    main: cmd/rtrmon/rtrmon.go
+    binary: rtrmon
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+
+nfpms:
+  - package_name: gortr
+    file_name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+    vendor: Cloudflare Inc.
+    homepage: https://github.com/cloudflare/gortr
+    # maintainer: Example <example@example.com>
+    description: "The RPKI-to-Router server used at Cloudflare"
+    license: BSD
+    section: utils
+    priority: extra
+    formats:
+      - deb
+      - rpm
+    builds:
+      - gortr
+      - rtrmon
+      - rtrdump
+    contents:
+      - src: package/gortr.service
+        dst: /lib/systemd/system/gortr.service
+      - src: cmd/gortr/cf.pub
+        dst: /usr/share/gortr/cf.pub
+      - src: package/gortr.env
+        dst: /etc/default/gortr
+        type: config
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
